@@ -1,0 +1,12 @@
+{{ ansible_managed|comment }}
+
+[Unit]
+Description=system configuration upgrade
+ 
+[Timer]
+{{ ansible_pull.timer }}
+Unit=ansible-pull.service
+Persistent=true
+ 
+[Install]
+WantedBy=multi-user.target

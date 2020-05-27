@@ -1,0 +1,15 @@
+---
+
+- name: install units for ansible-pull
+  template:
+    dest: /etc/systemd/system
+    src: "{{ item }}"
+  loop:
+    - ansible-pull.service
+    - ansible-pull.timer
+
+- name: enable ansible-pull timer
+  service:
+    name: ansible-pull.timer
+    state: started
+    enabled: yes

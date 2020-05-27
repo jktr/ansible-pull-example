@@ -1,0 +1,6 @@
+ansible_pull:
+  #url: https://git.example.com/ansible.git
+  timer: |
+    OnBootSec=5m
+    OnCalendar=daily
+    RandomizedDelaySec=30m
