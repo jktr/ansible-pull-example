@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+
+import yaml
+import os
+import json
+import argparse
+import collections as coll
+
+inventory_defaults = {
+    'ansible_ssh_port': 22,
+    'ansible_ssh_user': 'root',
+}
+
+ansibledir = os.path.dirname(os.path.realpath(__file__))
+host_vars = os.path.join(ansibledir, 'host_vars')
+
+ansible_groups = coll.defaultdict(list)
+ansible_hosts = {}
+
+for entry in os.scandir(host_vars):
+    if entry.name.endswith('.yml'):
+        host = entry.name[:-4]
+
+        yml = {}
+        with open(entry.path, 'r') as stream:
+            yml = yaml.safe_load(stream)
+
+        ansible_hosts[host] = { 'ansible_host': host }
+        for group in yml.get('pull_groups', []):
+            ansible_groups[group].append(host)
+
+parser = argparse.ArgumentParser(
+    description='convert ansible-pull data into push inventory'
+)
+pgroup = parser.add_mutually_exclusive_group(required=True)
+pgroup.add_argument('-l', '--list', action='store_true', help='list inventory')
+pgroup.add_argument('-H', '--host', action='store', help='get a host\'s variables')
+args = parser.parse_args()
+
+if args.host:
+    print(json.dumps(ansible_hosts[args.host]))
+elif args.list:
+    # format ref: https://docs.ansible.com/ansible/latest/dev_guide/developing_inventory.html
+    print(json.dumps({
+        '_meta': {
+            'hostvars': { **ansible_hosts }
+        },
+        'all': {
+            'hosts': list(ansible_hosts.keys()),
+            'vars': inventory_defaults,
+        },
+        **{x[0]: {'hosts': x[1]} for x in ansible_groups.items()}
+    }))
+else:
+    raise NotImplementedError()
