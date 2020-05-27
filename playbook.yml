@@ -1,0 +1,21 @@
+- hosts: mygroup
+  tasks:
+    - debug:
+        msg: "I'm in group 'mygroup'"
+
+- hosts: onlyfoo
+  tasks:
+    - debug:
+        msg: "I'm in group 'onlyfoo'"
+
+- hosts: onlybar
+  tasks:
+    - debug:
+        msg: "I'm in group 'onlybar'"
+
+- name: configure ansible-pull
+  hosts: all
+  roles:
+    - role: ansible-pull
+      ansible_pull:
+        url: https://git.example.com/ansible.git
