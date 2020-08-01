@@ -50,8 +50,7 @@ You'll want to invoke ansible like this if you use this ansible-pull setup:
 
 ```
 # pull mode (suitable for automation)
-foo$ ansible-pull -U https://git.example.com/ansible \
-       -i "$(hostname --short),"
+$ ansible-pull -U https://git.example.com/ansible.git -i "$(hostname --short),"
 
 # push mode (development)
 $ ansible-playbook -i inventory ./playbook.yml --limit foo.example.com
