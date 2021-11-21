@@ -5,5 +5,5 @@ Description=system configuration upgrade
 After=network-online.target
  
 [Service]
-ExecStart=/bin/sh -c 'ansible-pull -U "{{ ansible_pull.url }}" -i "$(uname -n)," --diff'
+ExecStart=/bin/sh -c 'ansible-pull -U "{{ ansible_pull_url }}" -i "$(uname -n)," --diff'
 TimeoutStopSec=600

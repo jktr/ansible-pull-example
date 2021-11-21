@@ -4,7 +4,7 @@
 Description=system configuration upgrade
  
 [Timer]
-{{ ansible_pull.timer }}
+{{ ansible_pull_timer }}
 Unit=ansible-pull.service
 Persistent=true
  
